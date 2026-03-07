@@ -1,0 +1,143 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Gestión de Inventario</h5>
+    <button class="btn btn-primary" (click)="showCreateForm()" *ngIf="!showForm">
+      <i class="bi bi-plus-circle me-2"></i>Nuevo Movimiento
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- FORMULARIO CREAR / EDITAR -->
+    <div *ngIf="showForm" class="mb-4">
+      <h6>{{ isEditing ? 'Editar Movimiento' : 'Registrar Movimiento' }}</h6>
+      <form (ngSubmit)="saveInventario()">
+        <div class="row">
+
+          <!-- Producto -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Producto *</label>
+            <select class="form-select" [(ngModel)]="currentInventario.id_producto" name="productoId" required>
+              <option [value]="0">Seleccione...</option>
+              <option *ngFor="let prod of productos" [value]="prod.id_producto">{{ prod.nombre }}</option>
+            </select>
+          </div>
+
+          <!-- Personal Responsable -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Personal Responsable *</label>
+            <select class="form-select" [(ngModel)]="currentInventario.id_personal" name="personalId" required>
+              <option [value]="0">Seleccione...</option>
+              <option *ngFor="let p of personal" [value]="p.id_personal">{{ p.nombres }} {{ p.apellidos }}</option>
+            </select>
+          </div>
+
+          <!-- Tipo de Movimiento -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Tipo *</label>
+            <select class="form-select" [(ngModel)]="currentInventario.tipo" name="tipo" required>
+              <option value="ENTRADA">Entrada</option>
+              <option value="SALIDA">Salida</option>
+              <option value="AJUSTE">Ajuste</option>
+            </select>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Cantidad *</label>
+            <input type="number" class="form-control" [(ngModel)]="currentInventario.cantidad" name="cantidad" required min="1">
+          </div>
+
+          <!-- Ubicación -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Ubicación *</label>
+            <input type="text" class="form-control" [(ngModel)]="currentInventario.ubicacion" name="ubicacion" required>
+          </div>
+
+          <!-- Fecha -->
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Fecha *</label>
+            <input type="date" class="form-control"
+                   [(ngModel)]="currentInventario.fecha"
+                   name="fechaInventario"
+                   required>
+          </div>
+
+          <!-- Observaciones -->
+          <div class="col-12 mb-3">
+            <label class="form-label">Observaciones</label>
+            <!--textarea class="form-control" [(ngModel)]="currentInventario.observaciones" name="observaciones" rows="2"></textarea-->
+          </div>
+
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle me-2"></i>{{ isEditing ? 'Actualizar' : 'Guardar' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelForm()">
+            <i class="bi bi-x-circle me-2"></i>Cancelar
+          </button>
+        </div>
+      </form>
+      <hr class="my-4">
+    </div>
+
+    <!-- TABLA DE INVENTARIOS -->
+    <div *ngIf="!showForm" class="table-responsive">
+      <input type="text" class="form-control mb-3" placeholder="Buscar por producto, responsable o ubicación..." [(ngModel)]="searchTerm">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Ubicación</th>
+            <th>Responsable</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inv of filteredInventarios">
+            <td>{{ inv.fecha | date:'yyyy-MM-dd' }}</td>
+            <td>{{ getProductoNombre(inv.id_producto) }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'bg-success': inv.tipo === 'ENTRADA',
+                'bg-danger': inv.tipo === 'SALIDA',
+                'bg-warning': inv.tipo === 'AJUSTE'
+              }">{{ inv.tipo }}</span>
+            </td>
+            <td>{{ inv.cantidad }}</td>
+            <td>{{ inv.ubicacion }}</td>
+            <td>{{ getPersonalNombre(inv.id_personal) }}</td>
+            <td>
+              <button class="btn btn-sm btn-warning me-1" (click)="showEditForm(inv)">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteInventario(inv.id_inventariado)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredInventarios.length === 0">
+            <td colspan="7" class="text-center">No se encontraron registros</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- DEBUG INFO -->
+<!--div style="background: yellow; padding: 10px; margin: 10px 0;">
+  <p><strong>DEBUG:</strong></p>
+  <p>Total inventarios: {{ inventarios.length }}</p>
+  <p>Total productos: {{ productos.length }}</p>
+  <p>Total personal: {{ personal.length }}</p>
+  <hr>
+  <p><strong>Primer inventario:</strong></p>
+  <pre>{{ inventarios[0] | json }}</pre>
+</div-->
+  </div>
+</div>
+

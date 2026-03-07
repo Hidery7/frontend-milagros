@@ -1,0 +1,12 @@
+table {
+  font-size: 12px; /* prueba 11px, 12px, 13px */
+    table-layout: fixed;
+  width: 100%;
+}
+th {
+  font-size: 0.8rem;  /* tamaño mayor */
+  font-weight: bold;   /* negrita */
+}
+td {
+  font-size: 0.8rem;     /* tamaño normal para los datos */
+}

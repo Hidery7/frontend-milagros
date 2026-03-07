@@ -1,0 +1,141 @@
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Gestión de Proveedores</h5>
+
+    <button class="btn btn-primary" (click)="showCreateForm()" *ngIf="!showForm">
+      <i class="bi bi-plus-circle me-2"></i>
+      Nuevo Proveedor
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- FORMULARIO -->
+    <div *ngIf="showForm" class="mb-4">
+      <h6>{{ isEditing ? 'Editar' : 'Crear' }} Proveedor</h6>
+
+      <form (ngSubmit)="saveProveedor()">
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre *</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="currentProveedor.nombre"
+                   name="nombre"
+                   required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">RUC *</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="currentProveedor.ruc"
+                   name="ruc"
+                   required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Teléfono *</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="currentProveedor.telefono"
+                   name="telefono"
+                   required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email *</label>
+            <input type="email" class="form-control"
+                   [(ngModel)]="currentProveedor.email"
+                   name="email"
+                   required>
+          </div>
+
+          <div class="col-12 mb-3">
+            <label class="form-label">Dirección *</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="currentProveedor.direccion"
+                   name="direccion"
+                   required>
+          </div>
+
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex gap-2 mt-3">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle me-2"></i>
+            Guardar
+          </button>
+
+          <button type="button" class="btn btn-secondary" (click)="cancelForm()">
+            <i class="bi bi-x-circle me-2"></i>
+            Cancelar
+          </button>
+        </div>
+      </form>
+
+      <hr class="my-4">
+    </div>
+
+    <!-- BUSCADOR -->
+    <div class="mb-3">
+      <input type="text"
+             class="form-control"
+             placeholder="Buscar por nombre o RUC..."
+             [(ngModel)]="searchTerm"
+             (ngModelChange)="onSearchChange($event)">
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-responsive">
+      <table class="table table-hover text-center align-middle">
+
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>RUC</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let proveedor of proveedorfiltrados">
+
+            <td>{{ proveedor.id_proveedor }}</td>
+            <td>{{ proveedor.nombre }}</td>
+            <td>{{ proveedor.ruc }}</td>
+            <td>{{ proveedor.telefono }}</td>
+            <td>{{ proveedor.email }}</td>
+            <td>{{ proveedor.direccion }}</td>
+
+            <td>
+              <button class="btn btn-sm btn-warning me-1"
+                      (click)="showEditForm(proveedor)">
+                <i class="bi bi-pencil"></i>
+              </button>
+
+              <button class="btn btn-sm btn-danger"
+                      (click)="deleteProveedor(proveedor.id_proveedor)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+
+          </tr>
+
+          <tr *ngIf="proveedorfiltrados.length === 0">
+            <td colspan="7" class="text-muted text-center">
+              No hay proveedores registrados
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</div>

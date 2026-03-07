@@ -1,0 +1,12 @@
+/*src/app/dashboard/productos/productos.component.css*/
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+table {
+  font-size: 12px; /* prueba 11px, 12px, 13px */
+    table-layout: fixed;
+  width: 100%;
+}

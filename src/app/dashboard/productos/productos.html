@@ -1,0 +1,204 @@
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Gestión de Productos</h5>
+    <button class="btn btn-primary" (click)="showCreateForm()" *ngIf="!showForm">
+      <i class="bi bi-plus-circle me-2"></i>Nuevo Producto
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- FORMULARIO -->
+    <div *ngIf="showForm" class="mb-4">
+
+      <h6>{{ isEditing ? 'Editar' : 'Crear' }} Producto</h6>
+
+      <form (ngSubmit)="saveProducto()">
+        <div class="row">
+
+          <!-- DATOS DEL PRODUCTO -->
+          <div class="col-md-8">
+            <div class="row">
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Nombre *</label>
+                <input type="text" class="form-control" name="nombre"
+                  [(ngModel)]="currentProducto.nombre" required>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Marca</label>
+                <input type="text" class="form-control" name="marca"
+                  [(ngModel)]="currentProducto.marca">
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Modelo</label>
+                <input type="text" class="form-control" name="modelo"
+                  [(ngModel)]="currentProducto.modelo">
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Serie</label>
+                <input type="text" class="form-control" name="serie"
+                  [(ngModel)]="currentProducto.serie">
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Precio *</label>
+                <input type="number" class="form-control" name="precio"
+                  [(ngModel)]="currentProducto.precio" min="0" step="0.01" required>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Stock *</label>
+                <input type="number" class="form-control" name="stock"
+                  [(ngModel)]="currentProducto.stock" min="0" required>
+              </div>
+
+              <!-- ✅ CATEGORIA - usa [ngValue] para comparar números correctamente -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Categoría *</label>
+                <select class="form-select" name="id_categoria"
+                  [(ngModel)]="currentProducto.id_categoria" required>
+                  <option [ngValue]="0" disabled>Seleccione categoría</option>
+                  <option *ngFor="let c of categoria" [ngValue]="c.id_categoria">
+                    {{ c.nombre }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- ✅ PROVEEDOR - usa [ngValue] para comparar números correctamente -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Proveedor *</label>
+                <select class="form-select" name="id_proveedor"
+                  [(ngModel)]="currentProducto.id_proveedor" required>
+                  <option [ngValue]="0" disabled>Seleccione proveedor</option>
+                  <option *ngFor="let p of proveedor" [ngValue]="p.id_proveedor">
+                    {{ p.nombre }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-12 mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" name="descripcion" rows="2"
+                  [(ngModel)]="currentProducto.descripcion"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- IMAGEN -->
+          <div class="col-md-4">
+            <div class="mb-2">
+              <label class="form-label">Imagen</label>
+              <input type="file" class="form-control" name="imagen"
+                (change)="onImageSelected($event)">
+              <div *ngIf="imagePreview" class="mt-2">
+                <img [src]="imagePreview" alt="Preview" class="img-thumbnail"
+                  style="max-width:150px;">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex gap-2 mt-3">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle me-2"></i>Guardar
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelForm()">
+            <i class="bi bi-x-circle me-2"></i>Cancelar
+          </button>
+        </div>
+
+      </form>
+      <hr class="my-4">
+    </div>
+
+    <!-- BUSCADOR -->
+    <div class="mb-3">
+      <input type="text" class="form-control" placeholder="Buscar por nombre, marca, categoría o proveedor..."
+        [(ngModel)]="searchTerm"
+        (input)="productosFiltrados = getfilteredProductos()">
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-responsive">
+      <table class="table table-hover text-center align-middle">
+
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Serie</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Categoría</th>
+            <th>Proveedor</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let producto of productosFiltrados">
+
+            <td>{{ producto.id_producto }}</td>
+
+            <td>
+              <img *ngIf="producto.imagen" [src]="producto.imagen"
+                class="img-thumbnail" style="width:50px;height:50px;object-fit:cover;">
+              <span *ngIf="!producto.imagen" class="text-muted">—</span>
+            </td>
+
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>{{ producto.marca }}</td>
+            <td>{{ producto.modelo }}</td>
+            <td>{{ producto.serie }}</td>
+
+            <td class="fw-bold text-success">
+              {{ producto.precio | currency }}
+            </td>
+
+            <td>
+              <span class="badge"
+                [ngClass]="producto.stock > 10 ? 'bg-success' : 'bg-warning'">
+                {{ producto.stock }}
+              </span>
+            </td>
+
+            <td>{{ getCategoriaNombre(producto.id_categoria) }}</td>
+            <td>{{ getProveedorNombre(producto.id_proveedor) }}</td>
+
+            <td>
+              <button class="btn btn-sm btn-warning me-1" (click)="showEditForm(producto)">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteProducto(producto.id_producto)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+
+          </tr>
+
+          <tr *ngIf="productosFiltrados.length === 0">
+            <td colspan="12" class="text-muted text-center">
+              No hay productos registrados
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</div>

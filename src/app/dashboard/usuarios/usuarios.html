@@ -1,0 +1,122 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Gestión de Usuarios</h5>
+    <button class="btn btn-primary" (click)="showCreateForm()" *ngIf="!showForm">
+      <i class="bi bi-plus-circle me-2"></i>Nuevo Usuario
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- FORMULARIO -->
+    <div *ngIf="showForm" class="mb-4">
+      <h6>{{ isEditing ? 'Editar' : 'Crear' }} Usuario</h6>
+      <form (ngSubmit)="saveUsuario()">
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Usuario *</label>
+            <input type="text" class="form-control" name="usuario" [(ngModel)]="currentUsuario.usuario" required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              {{ isEditing ? 'Nueva Contraseña (dejar vacío para no cambiar)' : 'Contraseña *' }}
+            </label>
+            <input type="password" class="form-control" name="password" [(ngModel)]="currentUsuario.password"
+              [required]="!isEditing">
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Rol *</label>
+            <select class="form-select" name="roles" [(ngModel)]="currentUsuario.roles" required>
+              <option value="admin">Administrador</option>
+              <option value="user">Usuario</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Estado *</label>
+            <select class="form-select" name="estado" [(ngModel)]="currentUsuario.estado" required>
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div> 
+
+          <!--div class="col-md-4 mb-3">
+            <label class="form-label"> Personal *</label>
+            <input type="number" class="form-control" name="id_personal"
+              [(ngModel)]="currentUsuario.id_personal" required>
+          </div-->
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Personal *</label>
+            <select class="form-select" name="id_personal" [(ngModel)]="currentUsuario.id_personal" required>
+              <option [ngValue]="null" disabled>Seleccione personal</option>
+              <option *ngFor="let p of personal" [ngValue]="p.id_personal">
+                {{ p.nombres }} {{ p.apellidos }} — {{ p.cargo }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="d-flex gap-2 mt-2">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle me-2"></i>Guardar
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelForm()">
+            <i class="bi bi-x-circle me-2"></i>Cancelar
+          </button>
+        </div>
+      </form>
+      <hr class="my-4">
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-responsive">
+      <table class="table table-hover text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Personal</th>
+            <th>Fecha Creación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of usuarios">
+            <td>{{ u.id_usuario }}</td>
+            <td>{{ u.usuario }}</td>
+            <td>
+              <span class="badge" [ngClass]="u.roles === 'admin' ? 'bg-danger' : 'bg-primary'">
+                {{ u.roles }}
+              </span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="u.estado === 'activo' ? 'bg-success' : 'bg-secondary'">
+                {{ u.estado }}
+              </span>
+            </td>
+            <td>{{ u.personal?.nombres +''+u.personal?.apellidos||'-' }}</td>
+            <td>{{ u.fecha_creacion | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <button class="btn btn-sm btn-warning me-1" (click)="showEditForm(u)">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteUsuario(u.id_usuario)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="usuarios.length === 0">
+            <td colspan="7" class="text-muted">No hay usuarios registrados</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
