@@ -42,6 +42,8 @@ export class ProductosComponent implements OnInit {
   loadProductos() {
     this.productosService.findAll().subscribe({
       next: (data: Producto[]) => {
+        console.log('Productos encontrados:',data)
+        console.log('Cantidad:',data.length)
         this.productos = data;
         this.productosFiltrados = [...data];
         this.cdr.detectChanges();

@@ -177,6 +177,7 @@ export class CategoriaComponent implements OnInit {
   showEditForm(categoria: Categoria): void {
     this.isEditing = true;
     this.currentCategoria = { ...categoria };
+    console.log('Categoria a editar:', this.currentCategoria);
     this.showForm = true;
   }
 

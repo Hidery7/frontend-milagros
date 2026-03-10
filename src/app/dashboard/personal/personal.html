@@ -47,11 +47,10 @@
           <div class="col-md-6 mb-3">
             <label class="form-label">Estado *</label>
             <select class="form-select" [(ngModel)]="currentPersonal.estado" name="estado" required>
-              <option [ngValue]="true">true</option>
-              <option [ngValue]="false">false</option>
+              <option [ngValue]="true">Activo</option>
+              <option [ngValue]="false">Inactivo</option>
             </select>
           </div>
-
           <div class="col-md-6 mb-3">
             <label class="form-label">Cargo *</label>
             <select class="form-select" [(ngModel)]="currentPersonal.cargo" name="cargo" required>
@@ -127,7 +126,7 @@
             <td>{{ p.telefono }}</td>
             <td>{{ p.email }}</td>
             <td>{{ p.salario | currency }}</td>
-            <td>{{ p.estado ? 'Sí' : 'No' }}</td>
+            <td>{{ p.estado ? 'Activo' : 'Inactivo' }}</td>
             <td>{{ p.cargo }}</td>
             <td>{{ p.departamento }}</td>
             <td>{{ p.fecha_contratacion | date:'yyyy-MM-dd' }}</td>

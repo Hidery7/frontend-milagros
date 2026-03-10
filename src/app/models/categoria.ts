@@ -4,6 +4,6 @@ export interface Categoria {
   id_categoria?: number;
   nombre: string;
   descripcion: string;
-  activo: boolean;
+  estado: boolean;
 
 }
